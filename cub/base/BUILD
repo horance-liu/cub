@@ -7,6 +7,23 @@ package(
 licenses(["notice"])  # Apache 2.0
 
 cc_library(
+    name = "any",
+    hdrs = ["any.h"],
+    srcs = ["any.cc"],
+    deps = ["//cub/dci"],
+)
+
+cc_test(
+    name = "any_test",
+    srcs = ["any_test.cc"],
+    deps = [
+        ":any",
+        "@xunit_cut//:cut",
+        "@xunit_cut//:cut_main",        
+    ],
+)
+
+cc_library(
     name = "assertions",
     hdrs = ["assertions.h"],
     deps = [

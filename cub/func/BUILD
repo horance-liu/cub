@@ -15,9 +15,6 @@ cc_library(
 cc_test(
     name = "unique_function_test",
     srcs = ["unique_function_test.cc"],
-    copts = [
-        "-Iexternal/xunit_cut/include"
-    ],    
     deps = [
         ":unique_function",
         "@xunit_cut//:cut",
