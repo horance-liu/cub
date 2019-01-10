@@ -90,8 +90,16 @@ private:                                                 \
 namespace dci {
 template <typename T>
 struct Role {
-  virtual ~Role() {
-  }
+  virtual ~Role() = default;
+  
+protected:
+  Role() = default;
+
+  Role(Role&&) noexcept = default;
+  Role& operator=(Role&&) noexcept = default;
+
+  Role(const Role&) = default;
+  Role& operator=(const Role&) = default; 
 };
 }  // namespace dci
 
