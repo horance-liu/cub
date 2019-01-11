@@ -18,6 +18,7 @@ cc_test(
     srcs = ["any_test.cc"],
     deps = [
         ":any",
+        ":static_assert",
         "@xunit_cut//:cut",
         "@xunit_cut//:cut_main",        
     ],

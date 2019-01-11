@@ -1,4 +1,5 @@
 #include "cub/base/any.h"
+#include "cub/base/static_assert.h"
 #include "cut/cut.hpp"
 
 using namespace cum;
@@ -10,12 +11,24 @@ FIXTURE(AnySpec) {
     ASSERT_TRUE(any.empty());
   }
 
-  TEST("any: int&&") {
+  TEST("failed: any(int) -> float") {
     Any any(2);
-    ASSERT_TRUE(any_cast<float>(&any) == nullptr);
+    ASSERT_TRUE(any.cast<float>() == nullptr);
+  }
 
-    auto result = any_cast<int>(&any);
-    ASSERT_TRUE(result != nullptr);
+  TEST("any: int") {
+    Any any(2);
+    auto result = any.cast<int>();
+    
+    STATIC_ASSERT_TYPE(int*, result);
+    ASSERT_TRUE(*result == 2);    
+  }
+
+  TEST("const any") {
+    const Any any(2);
+    auto result = any.cast<int>();
+
+    STATIC_ASSERT_TYPE(const int*, result);
     ASSERT_TRUE(*result == 2);    
   }
 
@@ -23,20 +36,20 @@ FIXTURE(AnySpec) {
     Any a(2);
     Any b(a);
 
-    auto result = any_cast<int>(&b);
-    ASSERT_TRUE(result != nullptr);
+    auto result = b.cast<int>();
+    STATIC_ASSERT_TYPE(int*, result);
     ASSERT_TRUE(*result == 2);    
   }
 
   TEST("move assignment") {
     Any a(2);
 
-    int value = 10;
+    std::string value("string value");
     a = std::move(value);
 
-    auto result = any_cast<int>(&a);
-    ASSERT_TRUE(result != nullptr);
-    ASSERT_TRUE(*result == 10);    
+    auto result = a.cast<std::string>();
+    STATIC_ASSERT_TYPE(std::string*, result);
+    ASSERT_TRUE(*result == "string value");    
   }
 
   TEST("move cons") {
@@ -46,8 +59,8 @@ FIXTURE(AnySpec) {
     ASSERT_TRUE(a.empty());
     ASSERT_FALSE(b.empty());
 
-    auto result = any_cast<int>(&b);
-    ASSERT_TRUE(result != nullptr);
+    auto result = b.cast<int>();
+    STATIC_ASSERT_TYPE(int*, result);
     ASSERT_TRUE(*result == 2);    
   }
 
@@ -56,18 +69,13 @@ FIXTURE(AnySpec) {
       Integer(int value) : value(value) {
       }
 
-      bool operator==(const Integer& rhs) const {
-        return value == rhs.value;
-      }
-    private:
       int value = 0;
     };
 
-    Any any(Integer(2));
-    ASSERT_TRUE(any_cast<int>(&any) == nullptr);
+    const Any any(Integer(2));
+    auto result = any.cast<Integer>();
 
-    auto result = any_cast<Integer>(&any);
-    ASSERT_TRUE(result != nullptr);
-    ASSERT_TRUE(*result == Integer(2));    
+    STATIC_ASSERT_TYPE(const Integer*, result);
+    ASSERT_TRUE(result->value == 2);    
   }
 };
