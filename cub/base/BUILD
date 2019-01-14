@@ -61,6 +61,22 @@ cc_library(
 )
 
 cc_library(
+    name = "nullptr",
+    hdrs = ["nullptr.h"],    
+)
+
+cc_test(
+    name = "nullptr_test",
+    srcs = ["nullptr_test.cc"],
+    deps = [
+        ":nullptr",
+        ":static_assert",
+        "@xunit_cut//:cut",
+        "@xunit_cut//:cut_main",        
+    ],
+)
+
+cc_library(
     name = "optional",
     hdrs = [
         "optional.h",
@@ -122,6 +138,22 @@ cc_test(
     ],
 )
 
+cc_library(              
+    name = "safe_equal",   
+    hdrs = ["safe_equal.h"],
+)
+
+cc_test(
+    name = "safe_equal_test",
+    srcs = ["safe_equal_test.cc"],
+    deps = [
+        ":safe_equal",
+        ":static_assert",
+        "@xunit_cut//:cut",
+        "@xunit_cut//:cut_main",        
+    ],
+)
+
 cc_library(
     name = "static_assert",
     hdrs = ["static_assert.h"],
@@ -137,6 +169,16 @@ cc_library(
     hdrs = ["scoped_exit.h"],
     deps = [
       ":symbol",
+    ],
+)
+
+cc_test(
+    name = "scoped_exit_test",
+    srcs = ["scoped_exit_test.cc"],
+    deps = [
+        ":scoped_exit",
+        "@xunit_cut//:cut",
+        "@xunit_cut//:cut_main",        
     ],
 )
 
@@ -171,4 +213,28 @@ cc_library(
 cc_library(
     name = "hash",
     hdrs = ["hash.h"],
+)
+
+cc_library(
+  name = "identity",
+  hdrs = ["identity.h"],
+)
+
+cc_library(
+    name = "inline_variable",
+    hdrs = ["inline_variable.h"],
+    deps = [
+        ":identity",
+        ":static_assert",
+    ],
+)
+
+cc_test(
+    name = "inline_variable_test",
+    srcs = ["inline_variable_test.cc"],
+    deps = [
+        ":inline_variable",
+        "@xunit_cut//:cut",
+        "@xunit_cut//:cut_main",
+    ],
 )
