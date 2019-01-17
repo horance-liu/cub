@@ -6,14 +6,14 @@ using namespace cub;
 
 namespace {
   DEFINE_ROLE(Energy) {
-    ABSTRACT(void consume());ABSTRACT(bool isExhausted() const);
+    ABSTRACT(void consume());
+    ABSTRACT(bool isExhausted() const);
   };
 
   const int MAX_CONSUME_TIMES = 10;
 
   struct HumanEnergy: Energy {
-    HumanEnergy()
-        : isHungry(false), consumeTimes(0) {
+    HumanEnergy() : isHungry(false), consumeTimes(0) {
     }
 
     void supplyByFood() {
@@ -24,7 +24,6 @@ namespace {
   private:
     OVERRIDE(void consume()) {
       consumeTimes++;
-
       if (consumeTimes >= MAX_CONSUME_TIMES) {
         isHungry = true;
       }
@@ -43,8 +42,7 @@ namespace {
   const int CONSUME_PERCENT = 1;
 
   struct ChargeEnergy: Energy {
-    ChargeEnergy()
-        : percent(0) {
+    ChargeEnergy() : percent(0) {
     }
 
     void charge() {
@@ -66,16 +64,13 @@ namespace {
   };
 
   DEFINE_ROLE(Worker) {
-    Worker()
-        : produceNum(0) {
+    Worker() : produceNum(0) {
     }
 
     void produce() {
       if (ROLE(Energy).isExhausted())
         return;
-
       produceNum++;
-
       ROLE(Energy).consume();
     }
 
@@ -93,13 +88,11 @@ namespace {
   struct Human: Worker, HumanEnergy {
   private:
     IMPL_ROLE(Energy)
-    ;
   };
 
   struct Robot: Worker, ChargeEnergy {
   private:
     IMPL_ROLE(Energy)
-    ;
   };
 }
 

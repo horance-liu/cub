@@ -4,7 +4,6 @@
 #include <memory>
 #include <typeinfo>
 #include <type_traits>
-#include <any>
 
 #include "cub/dci/role.h"
 

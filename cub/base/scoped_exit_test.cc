@@ -9,7 +9,7 @@ FIXTURE(ScopedExitSpec) {
   TEST("should invoke callback") {
     auto invoked = false;
     {
-      SCOPED_EXIT([&invoked]{
+      CUB_SCOPED_EXIT([&invoked]{
         invoked = true;
       });
     }
@@ -19,7 +19,7 @@ FIXTURE(ScopedExitSpec) {
   TEST("should invoke callback if throw runtime exception") {
     auto invoked = false;
     try {
-      SCOPED_EXIT([&invoked]{
+      CUB_SCOPED_EXIT([&invoked]{
         invoked = true;
       });
       throw std::exception();

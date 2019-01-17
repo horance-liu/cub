@@ -36,8 +36,8 @@ ScopedExit<F> make_scoped_exit(F&& f) {
   return {std::forward<F>(f)};
 };
 
-#define SCOPED_EXIT(code) \
-auto UNIQUE_NAME(scoped_exit_) = cub::make_scoped_exit((code))
+#define CUB_SCOPED_EXIT(code) \
+auto CUB_UNIQUE_NAME(scoped_exit_) = cub::make_scoped_exit((code))
 
 }  // namespace cub
 
