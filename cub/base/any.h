@@ -26,13 +26,17 @@ struct Any {
     typename Ref, typename T = std::decay_t<Ref>,
     typename = std::enable_if_t<!std::is_same<Any, T>()>
   >
-  Any(Ref&& ref);
+  Any(Ref&& ref) : ptr(new Impl<T>(std::forward<Ref>(ref))) {
+  }
 
   template<
     typename Ref, typename T = std::decay_t<Ref>,
     typename = std::enable_if_t<!std::is_same<Any, T>()>
   >
-  Any& operator=(Ref&& ref);
+  Any& operator=(Ref&& ref) {
+    Any(std::forward<Ref>(ref)).swap(*this);
+    return *this; 
+  }
 
   void clear() noexcept;
   bool empty() const noexcept;
@@ -83,22 +87,6 @@ private:
 private:
   T t;
 };
-
-template<
-  typename Ref, typename T = std::decay_t<Ref>,
-  typename = std::enable_if_t<!std::is_same<Any, T>()>
->
-inline Any::Any(Ref&& ref) : ptr(new Impl<T>(std::forward<Ref>(ref)))
-{}
-
-template<
-  typename Ref, typename T = std::decay_t<Ref>,
-  typename = std::enable_if_t<!std::is_same<Any, T>()>
->
-inline Any& Any::operator=(Ref&& ref) {
-  Any(std::forward<Ref>(ref)).swap(*this);
-  return *this;
-}
 
 template <typename T>
 inline T* Any::cast() noexcept {

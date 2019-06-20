@@ -18,7 +18,7 @@ struct ScopedExit {
   }
 
   ScopedExit(ScopedExit&& rhs) noexcept
-      : f(std::move(f)) {
+      : f(std::move(rhs.f)) {
     rhs.dismissed = true;
   }
 

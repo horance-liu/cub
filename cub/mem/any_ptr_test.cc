@@ -32,14 +32,10 @@ FIXTURE(AnyPtrTest) {
   TEST("base") {
     struct Base {
       virtual ~Base() {}
-    private:
-      int unused_base_var_ = 0;
     };
 
     struct Child : Base {
       ~Child() override {}
-    private:
-      int unused_child_var_ = 0;
     };
 
     AnyPtr ptr;
