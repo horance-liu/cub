@@ -1,0 +1,39 @@
+cub_cc_library(
+    NAME
+        dci
+    HDRS
+        role.h 
+        interp/decl_role_interp.h
+        interp/has_role_interp.h
+        interp/impl_role_interp.h
+        interp/roles_undef.h
+    DEPS
+        cub::unknown
+        cub::keywords
+    COPTS
+        ${CUB_DEFAULT_COPTS}
+    PUBLIC        
+)
+
+cub_cc_test(
+    NAME
+        dci_test
+    SRCS
+        role_test.cc
+        has_role_test.cc
+    DEPS
+        cub::dci
+        cut
+        cut_main        
+)
+
+cub_cc_library(
+    NAME
+        unknown
+    HDRS
+        interface_def.h
+        unknown.h
+    COPTS
+        ${CUB_DEFAULT_COPTS}
+    PUBLIC        
+)

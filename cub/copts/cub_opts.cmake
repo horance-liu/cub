@@ -1,0 +1,55 @@
+# See cub/copts/copts.py and cub/copts/generate_copts.py
+include(generated_cub_copts)
+
+set(CUB_LSAN_LINKOPTS "")
+set(CUB_HAVE_LSAN OFF)
+set(CUB_DEFAULT_LINKOPTS "")
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  set(CUB_DEFAULT_COPTS "${CUB_GCC_FLAGS}")
+  set(CUB_TEST_COPTS "${CUB_GCC_FLAGS};${CUB_GCC_TEST_FLAGS}")
+  set(CUB_EXCEPTIONS_FLAG "${CUB_GCC_EXCEPTIONS_FLAGS}")
+elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+  # MATCHES so we get both Clang and AppleClang
+  if(MSVC)
+    # clang-cl is half MSVC, half LLVM
+    set(CUB_DEFAULT_COPTS "${CUB_CLANG_CL_FLAGS}")
+    set(CUB_TEST_COPTS "${CUB_CLANG_CL_FLAGS};${CUB_CLANG_CL_TEST_FLAGS}")
+    set(CUB_EXCEPTIONS_FLAG "${CUB_CLANG_CL_EXCEPTIONS_FLAGS}")
+    set(CUB_DEFAULT_LINKOPTS "${CUB_MSVC_LINKOPTS}")
+  else()
+    set(CUB_DEFAULT_COPTS "${CUB_LLVM_FLAGS}")
+    set(CUB_TEST_COPTS "${CUB_LLVM_FLAGS};${CUB_LLVM_TEST_FLAGS}")
+    set(CUB_EXCEPTIONS_FLAG "${CUB_LLVM_EXCEPTIONS_FLAGS}")
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+      # AppleClang doesn't have lsan
+      # https://developer.apple.com/documentation/code_diagnostics
+      if(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5)
+        set(CUB_LSAN_LINKOPTS "-fsanitize=leak")
+        set(CUB_HAVE_LSAN ON)
+      endif()
+    endif()
+  endif()
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+  set(CUB_DEFAULT_COPTS "${CUB_MSVC_FLAGS}")
+  set(CUB_TEST_COPTS "${CUB_MSVC_FLAGS};${CUB_MSVC_TEST_FLAGS}")
+  set(CUB_EXCEPTIONS_FLAG "${CUB_MSVC_EXCEPTIONS_FLAGS}")
+  set(CUB_DEFAULT_LINKOPTS "${CUB_MSVC_LINKOPTS}")
+else()
+  message(WARNING "Unknown compiler: ${CMAKE_CXX_COMPILER}.  Building with no default flags")
+  set(CUB_DEFAULT_COPTS "")
+  set(CUB_TEST_COPTS "")
+  set(CUB_EXCEPTIONS_FLAG "")
+endif()
+
+# This flag is used internally for Bazel builds and is kept here for consistency
+set(CUB_EXCEPTIONS_FLAG_LINKOPTS "")
+
+if("${CMAKE_CXX_STANDARD}" EQUAL 98)
+  message(FATAL_ERROR "Cub requires at least C++11")
+elseif(NOT "${CMAKE_CXX_STANDARD}")
+  message(STATUS "No CMAKE_CXX_STANDARD set, assuming 11")
+  set(CUB_CXX_STANDARD 11)
+else()
+  set(CUB_CXX_STANDARD "${CMAKE_CXX_STANDARD}")
+endif()
