@@ -1,28 +1,32 @@
-cub_cc_library(
-    NAME
-        array_size
-    HDRS
-        array_size.h
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
 )
 
-cub_cc_library(
-    NAME
-        array
-    HDRS
-        array.h
-    DEPS
-        cub::static_assert
-        cub::comparator
-        cub::placement 
+licenses(["notice"])  # Apache 2.0
+
+cc_library(
+    name = "array_size",
+    hdrs = ["array_size.h"],
 )
 
-cub_cc_test(
-    NAME
-        array_test
-    srcs 
-        array_test.cc
-    DEPS
-        array
-        cut
-        cut_main 
+cc_library(
+    name = "array",
+    hdrs = ["array.h"],
+    deps = [
+        "//cub/base:static_assert",
+        "//cub/base:comparator",
+        "//cub/base:placement",
+    ], 
+)
+
+cc_test(
+    name = "array_test",
+    srcs = ["array_test.cc"],
+    deps = [
+        ":array",
+        "@xunit_cut//:cut",
+        "@xunit_cut//:cut_main",        
+    ],
 )
